@@ -189,8 +189,6 @@ architecture arch_imp of full_radio_v1_0_S00_AXI is
     signal inPhase_fir2_tvalid, quadrature_fir2_tvalid : std_logic;
     
     signal tuner_pinc : std_logic_vector (31 downto 0);
-    signal tuner_on : std_logic;
-    signal I_corrected, Q_corrected : std_logic_vector (15 downto 0);
     
     signal timer : unsigned (31 downto 0);
 
@@ -534,10 +532,7 @@ begin
       );
     
     -- Amplitude corrector
-    tuner_on <= '0' when tuner_pinc = "00000000000000000000000000000000" else '1';
-    I_corrected <= inPhase_fir2_tdata(14 downto 0)&'0' when tuner_on='1' else inPhase_fir2_tdata(15 downto 0);
-    Q_corrected <= quadrature_fir2_tdata(14 downto 0)&'0' when tuner_on='1' else quadrature_fir2_tdata(15 downto 0);
-    m_axis_tdata <= I_corrected & Q_corrected;
+    m_axis_tdata <= inPhase_fir2_tdata(15 downto 0) & quadrature_fir2_tdata(15 downto 0);
     
     m_axis_tvalid <= inPhase_fir2_tvalid and quadrature_fir2_tvalid;
     
